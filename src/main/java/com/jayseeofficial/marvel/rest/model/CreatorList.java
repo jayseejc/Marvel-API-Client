@@ -1,10 +1,11 @@
 package com.jayseeofficial.marvel.rest.model;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class CreatorList extends AbstractList {
+import java.io.Serializable;
+import java.util.List;
+
+public class CreatorList extends AbstractList implements Serializable {
     private List<CreatorSummary> items;
 
     public List<CreatorSummary> getItems() {

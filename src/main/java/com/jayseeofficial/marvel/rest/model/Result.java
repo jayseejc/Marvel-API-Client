@@ -2,7 +2,9 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Result<T> {
+import java.io.Serializable;
+
+public class Result<T> implements Serializable {
     private int code;
     private String status;
     private String etag;

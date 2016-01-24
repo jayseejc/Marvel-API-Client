@@ -2,7 +2,9 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Text {
+import java.io.Serializable;
+
+public class Text implements Serializable {
     private String type;
     private String language;
     private String text;

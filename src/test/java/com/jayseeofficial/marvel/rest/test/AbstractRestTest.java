@@ -21,8 +21,8 @@ public class AbstractRestTest {
 
     @Before
     public void before() {
-        String publicKey = "YOUR PUBLIC KEY HERE";
-        String privateKey = "YOUR PRIVATE KEY HERE";
+        String publicKey = Constants.PUBLIC_KEY;
+        String privateKey = Constants.PRIVATE_KEY;
 
         assertThat(publicKey).isNotEmpty();
         assertThat(publicKey).isNotEqualTo("YOUR PUBLIC KEY HERE");

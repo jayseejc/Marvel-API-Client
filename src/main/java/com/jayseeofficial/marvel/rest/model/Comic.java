@@ -1,10 +1,11 @@
 package com.jayseeofficial.marvel.rest.model;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Comic {
+import java.io.Serializable;
+import java.util.List;
+
+public class Comic implements Serializable {
     private int id;
     private int digitalId;
     private String title;

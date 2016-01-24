@@ -2,7 +2,9 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class URL {
+import java.io.Serializable;
+
+public class URL implements Serializable {
     private String type;
     private String url;
 

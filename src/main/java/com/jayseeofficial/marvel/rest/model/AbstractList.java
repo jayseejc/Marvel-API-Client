@@ -1,6 +1,8 @@
 package com.jayseeofficial.marvel.rest.model;
 
-public abstract class AbstractList {
+import java.io.Serializable;
+
+public abstract class AbstractList implements Serializable{
     protected int available;
     protected int returned;
     protected String collectionURI;

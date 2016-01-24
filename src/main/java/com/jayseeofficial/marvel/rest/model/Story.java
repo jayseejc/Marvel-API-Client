@@ -1,12 +1,14 @@
 package com.jayseeofficial.marvel.rest.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
+import java.util.List;
+
 @JsonIgnoreProperties
-public class Story {
+public class Story implements Serializable {
     private int id;
     private String title;
     private String description;

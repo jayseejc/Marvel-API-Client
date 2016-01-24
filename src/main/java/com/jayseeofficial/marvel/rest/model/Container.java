@@ -1,10 +1,11 @@
 package com.jayseeofficial.marvel.rest.model;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Container<T> {
+import java.io.Serializable;
+import java.util.List;
+
+public class Container<T> implements Serializable {
     private int offset;
     private int limit;
     private int total;

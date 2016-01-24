@@ -2,9 +2,10 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CharacterList extends AbstractList {
+public class CharacterList extends AbstractList implements Serializable {
     private List<CharacterSummary> items;
 
     public List<CharacterSummary> getItems() {

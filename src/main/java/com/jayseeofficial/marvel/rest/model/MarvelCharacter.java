@@ -1,11 +1,12 @@
 package com.jayseeofficial.marvel.rest.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-public class MarvelCharacter {
+public class MarvelCharacter implements Serializable {
 
     private int id;
     private String name;

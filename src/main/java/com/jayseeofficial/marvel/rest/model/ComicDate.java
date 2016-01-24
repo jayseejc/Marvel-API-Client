@@ -2,7 +2,9 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class ComicDate {
+import java.io.Serializable;
+
+public class ComicDate implements Serializable {
     private String type;
     private String date;
 

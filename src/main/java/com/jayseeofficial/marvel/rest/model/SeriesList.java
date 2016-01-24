@@ -2,9 +2,10 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SeriesList {
+public class SeriesList implements Serializable {
     private int available;
     private int returned;
     private String collectionURI;

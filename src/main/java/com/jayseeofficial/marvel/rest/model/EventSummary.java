@@ -2,7 +2,9 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class EventSummary {
+import java.io.Serializable;
+
+public class EventSummary implements Serializable {
     private String resourceURI;
     private String name;
 

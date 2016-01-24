@@ -1,10 +1,11 @@
 package com.jayseeofficial.marvel.rest.model;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class StoryList {
+import java.io.Serializable;
+import java.util.List;
+
+public class StoryList implements Serializable {
     private int available;
     private int returned;
     private String collectionURI;

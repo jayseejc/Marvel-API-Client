@@ -2,7 +2,9 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class ComicPrice {
+import java.io.Serializable;
+
+public class ComicPrice implements Serializable {
     private String type;
     private float price;
 

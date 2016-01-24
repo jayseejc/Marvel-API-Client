@@ -47,12 +47,12 @@ public class RestClient {
     private StoryService stories;
     private SeriesService series;
 
-    public RestClient(String privateKey, String publicKey) {
+    public RestClient(String publicKey, String privateKey) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(new AuthenticationInterceptor(privateKey, publicKey))
+                .addInterceptor(new AuthenticationInterceptor(publicKey, privateKey))
                 .addInterceptor(new com.jayseeofficial.marvel.rest.interceptor.UserAgentInterceptor())
                 .build();
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();

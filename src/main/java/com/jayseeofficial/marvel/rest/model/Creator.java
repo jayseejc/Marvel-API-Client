@@ -1,10 +1,11 @@
 package com.jayseeofficial.marvel.rest.model;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Creator {
+import java.io.Serializable;
+import java.util.List;
+
+public class Creator implements Serializable {
 
     private int id;
     private String firstName;

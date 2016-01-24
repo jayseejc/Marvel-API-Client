@@ -1,10 +1,11 @@
 package com.jayseeofficial.marvel.rest.model;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Event {
+import java.io.Serializable;
+import java.util.List;
+
+public class Event implements Serializable {
     private int id;
     private String title;
     private String description;

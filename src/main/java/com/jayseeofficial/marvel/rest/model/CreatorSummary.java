@@ -2,7 +2,9 @@ package com.jayseeofficial.marvel.rest.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class CreatorSummary {
+import java.io.Serializable;
+
+public class CreatorSummary implements Serializable {
     private String resourceURI;
     private String name;
     private String role;

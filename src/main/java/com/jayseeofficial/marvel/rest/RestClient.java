@@ -25,6 +25,7 @@ import com.jayseeofficial.marvel.rest.services.SeriesService;
 import com.jayseeofficial.marvel.rest.services.StoryService;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -37,7 +38,19 @@ import retrofit2.Retrofit;
  */
 public class RestClient {
 
+    public static final int MAX_LIMIT = 100;
+
     private static final String MARVEL_BASE_URL = "https://gateway.marvel.com";
+    private static final long DEFAULT_HTTP_TIMEOUT = 30; // Seconds
+    private static final HttpLoggingInterceptor.Level DEFAULT_LOG_LEVEL = HttpLoggingInterceptor.Level.NONE;
+
+    private String publicKey;
+    private String privateKey;
+    private long timeout;
+    private HttpLoggingInterceptor.Level logLevel;
+    private HttpLoggingInterceptor loggingInterceptor;
+    private AuthenticationInterceptor authenticationInterceptor;
+    private OkHttpClient client;
 
     private Retrofit retrofit;
     private CharacterService characters;
@@ -48,13 +61,40 @@ public class RestClient {
     private SeriesService series;
 
     public RestClient(String publicKey, String privateKey) {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+        this.timeout = DEFAULT_HTTP_TIMEOUT;
+        this.logLevel = DEFAULT_LOG_LEVEL;
+
+        initLogging();
+        initAuth();
+        initHttpClient();
+        initServices();
+    }
+
+    private void initLogging(){
+        loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(logLevel);
+        initHttpClient();
+    }
+
+    private void initAuth() {
+        authenticationInterceptor=new AuthenticationInterceptor(publicKey,privateKey);
+    }
+
+    private void initHttpClient(){
+        client = new OkHttpClient.Builder()
+                .connectTimeout(timeout, TimeUnit.SECONDS)
+                .readTimeout(timeout, TimeUnit.SECONDS)
+                .writeTimeout(timeout, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(new AuthenticationInterceptor(publicKey, privateKey))
                 .addInterceptor(new com.jayseeofficial.marvel.rest.interceptor.UserAgentInterceptor())
                 .build();
+        initServices();
+    }
+
+    private void initServices(){
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(MARVEL_BASE_URL)
@@ -612,7 +652,7 @@ public class RestClient {
         });
     }
 
-    public void getCreatorEvents(Integer creatorId, EventParameters parameters, final Callback<Event> callback){
+    public void getCreatorEvents(Integer creatorId, EventParameters parameters, final Callback<Event> callback) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -644,7 +684,7 @@ public class RestClient {
         });
     }
 
-    public void getCreatorSeries(Integer creatorId, SeriesParameters parameters, final Callback<Series> callback){
+    public void getCreatorSeries(Integer creatorId, SeriesParameters parameters, final Callback<Series> callback) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -687,7 +727,7 @@ public class RestClient {
         });
     }
 
-    public void getCreatorStories(Integer creatorId, StoryParameters parameters, final Callback<Story> callback){
+    public void getCreatorStories(Integer creatorId, StoryParameters parameters, final Callback<Story> callback) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -1483,7 +1523,17 @@ public class RestClient {
 
     //</editor-fold>
 
-    String listToString(List<?> theList) {
+    public void setTimeout(long timeoutInSeconds) {
+        timeout = timeoutInSeconds;
+        initHttpClient();
+    }
+
+    public void setLogLevel(HttpLoggingInterceptor.Level level) {
+        logLevel=level;
+        initLogging();
+    }
+
+    private String listToString(List<?> theList) {
         if (theList == null) return null;
         String s = "";
         for (Object o : theList) {

@@ -383,6 +383,7 @@ public class RestClient {
                 parameters.getHasDigitalIssue(),
                 parameters.getModifiedSince(),
                 listToString(parameters.getCreators()),
+                listToString(parameters.getCharacters()),
                 listToString(parameters.getSeries()),
                 listToString(parameters.getEvents()),
                 listToString(parameters.getStories()),

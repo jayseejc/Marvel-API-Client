@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by jon on 20/01/16.
  */
-public class CharacterParameters{
+public class CharacterParameters {
 
     private CharacterParameters() {
     }
@@ -67,6 +67,14 @@ public class CharacterParameters{
     public static class Builder {
         CharacterParameters parameters = new CharacterParameters();
 
+        public Builder() {
+
+        }
+
+        public Builder(CharacterParameters baseParams) {
+            parameters = baseParams;
+        }
+
         public Builder name(String name) {
             parameters.name = name;
             return this;
@@ -82,9 +90,8 @@ public class CharacterParameters{
             return this;
         }
 
-        public Builder comics(Integer... comics) {
-            parameters.comics = new ArrayList<>(comics.length);
-            parameters.comics.addAll(Arrays.asList(comics));
+        public Builder comics(List<Integer> comics) {
+            parameters.comics = comics;
             return this;
         }
 

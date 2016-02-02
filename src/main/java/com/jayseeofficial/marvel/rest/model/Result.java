@@ -78,6 +78,13 @@ public class Result<T> implements Serializable {
         this.rawResponse = rawResponse;
     }
 
+    public boolean isResultOf(Class c) {
+        for (T t : data.getResults()) {
+            if (!c.isInstance(t)) return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

@@ -24,11 +24,13 @@ import com.jayseeofficial.marvel.rest.services.EventService;
 import com.jayseeofficial.marvel.rest.services.SeriesService;
 import com.jayseeofficial.marvel.rest.services.StoryService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -51,6 +53,7 @@ public class RestClient {
     private HttpLoggingInterceptor loggingInterceptor;
     private AuthenticationInterceptor authenticationInterceptor;
     private OkHttpClient client;
+    private List<Call<?>> calls;
 
     private Retrofit retrofit;
     private CharacterService characters;
@@ -65,6 +68,7 @@ public class RestClient {
         this.privateKey = privateKey;
         this.timeout = DEFAULT_HTTP_TIMEOUT;
         this.logLevel = DEFAULT_LOG_LEVEL;
+        this.calls = new ArrayList<>();
 
         initLogging();
         initAuth();
@@ -72,17 +76,17 @@ public class RestClient {
         initServices();
     }
 
-    private void initLogging(){
+    private void initLogging() {
         loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(logLevel);
         initHttpClient();
     }
 
     private void initAuth() {
-        authenticationInterceptor=new AuthenticationInterceptor(publicKey,privateKey);
+        authenticationInterceptor = new AuthenticationInterceptor(publicKey, privateKey);
     }
 
-    private void initHttpClient(){
+    private void initHttpClient() {
         client = new OkHttpClient.Builder()
                 .connectTimeout(timeout, TimeUnit.SECONDS)
                 .readTimeout(timeout, TimeUnit.SECONDS)
@@ -94,7 +98,7 @@ public class RestClient {
         initServices();
     }
 
-    private void initServices(){
+    private void initServices() {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(MARVEL_BASE_URL)
@@ -111,27 +115,33 @@ public class RestClient {
 
     // <editor-fold desc="Character methods">
 
-    public void getCharacter(int id, final com.jayseeofficial.marvel.rest.Callback callback) {
-        characters.getCharacter(id).enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
+    public void getCharacter(int id, final Callback<MarvelCharacter> callback) {
+        final Call<Result<MarvelCharacter>> call = characters.getCharacter(id);
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(retrofit2.Response<Result<MarvelCharacter>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
     }
 
     public void getCharacters(CharacterParameters parameters, final Callback<MarvelCharacter> callback) {
+        if (parameters == null) parameters = new CharacterParameters.Builder().build();
         CharacterOrderBy orderBy = parameters.getOrderBy();
+
         String orderByString = null;
         if (orderBy != null)
             orderByString = orderBy.toString();
 
-        characters.getCharacters(
+        final Call<Result<MarvelCharacter>> call = characters.getCharacters(
                 parameters.getName(),
                 parameters.getNameStartsWith(),
                 parameters.getModifiedSince(),
@@ -141,18 +151,21 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset())
-                .enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
-                    @Override
-                    public void onResponse(Response<Result<MarvelCharacter>> response) {
-                        callback.success(response.body());
-                    }
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
+            @Override
+            public void onResponse(Response<Result<MarvelCharacter>> response) {
+                calls.remove(call);
+                callback.success(response.body());
+            }
 
-                    @Override
-                    public void onFailure(Throwable t) {
-                        callback.error(t);
-                    }
-                });
+            @Override
+            public void onFailure(Throwable t) {
+                calls.remove(call);
+                callback.error(t);
+            }
+        });
     }
 
     public void getCharacterComics(Integer characterId, ComicParameters parameters, final Callback<Comic> callback) {
@@ -178,7 +191,7 @@ public class RestClient {
         if (parameters.getDateRange() != null)
             dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
 
-        characters.getCharacterComics(
+        final Call<Result<Comic>> call = characters.getCharacterComics(
                 characterId,
                 formatString,
                 formatTypeString,
@@ -205,15 +218,18 @@ public class RestClient {
                 listToString(parameters.getCollaborators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Comic>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -225,7 +241,7 @@ public class RestClient {
         String orderByString = null;
         if (parameters.getOrderBy() != null) orderByString = parameters.getOrderBy().toString();
 
-        characters.getCharacterEvents(
+        final Call<Result<Event>> call = characters.getCharacterEvents(
                 characterId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -236,15 +252,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Event>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -265,7 +284,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        characters.getCharacterSeries(
+        final Call<Result<Series>> call = characters.getCharacterSeries(
                 characterId,
                 parameters.getTitle(),
                 parameters.getTitleStartsWith(),
@@ -279,15 +298,18 @@ public class RestClient {
                 containsString,
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Series>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -300,7 +322,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        characters.getCharacterStories(
+        final Call<Result<Story>> call = characters.getCharacterStories(
                 characterId,
                 parameters.getModifiedSince(),
                 listToString(parameters.getComics()),
@@ -309,15 +331,18 @@ public class RestClient {
                 listToString(parameters.getCreators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Story>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -328,14 +353,18 @@ public class RestClient {
     //<editor-fold desc="Comic methods">
 
     public void getComic(Integer comicId, final Callback<Comic> callback) {
-        comics.getComic(comicId).enqueue(new retrofit2.Callback<Result<Comic>>() {
+        final Call<Result<Comic>> call = comics.getComic(comicId);
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -364,7 +393,7 @@ public class RestClient {
         if (parameters.getDateRange() != null)
             dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
 
-        comics.getComics(
+        final Call<Result<Comic>> call = comics.getComics(
                 formatString,
                 formatTypeString,
                 parameters.getNoVariants(),
@@ -391,15 +420,18 @@ public class RestClient {
                 listToString(parameters.getCollaborators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Comic>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -412,7 +444,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        comics.getComicCharacters(
+        final Call<Result<MarvelCharacter>> call = comics.getComicCharacters(
                 comicId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -422,15 +454,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -443,7 +478,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        comics.getComicCreators(
+        final Call<Result<Creator>> call = comics.getComicCreators(
                 comicId,
                 parameters.getFirstName(),
                 parameters.getMiddleName(),
@@ -459,15 +494,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Creator>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -480,7 +518,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        comics.getComicEvents(
+        final Call<Result<Event>> call = comics.getComicEvents(
                 comicId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -491,15 +529,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Event>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -513,7 +554,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        comics.getComicStories(
+        final Call<Result<Story>> call = comics.getComicStories(
                 comicId,
                 parameters.getModifiedSince(),
                 listToString(parameters.getSeries()),
@@ -521,15 +562,18 @@ public class RestClient {
                 listToString(parameters.getCreators()),
                 listToString(parameters.getCharacters()),
                 orderByString, parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Story>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -539,14 +583,18 @@ public class RestClient {
 
     //<editor-fold desc="Creator methods">
     public void getCreator(Integer creatorId, final Callback<Creator> callback) {
-        creators.getCreator(creatorId).enqueue(new retrofit2.Callback<Result<Creator>>() {
+        final Call<Result<Creator>> call = creators.getCreator(creatorId);
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -559,7 +607,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        creators.getCreators(
+        final Call<Result<Creator>> call = creators.getCreators(
                 parameters.getFirstName(),
                 parameters.getMiddleName(),
                 parameters.getLastName(),
@@ -575,15 +623,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Creator>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -612,7 +663,7 @@ public class RestClient {
         if (parameters.getDateRange() != null)
             dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
 
-        creators.getCreatorComics(
+        final Call<Result<Comic>> call = creators.getCreatorComics(
                 creatorId,
                 formatString,
                 formatTypeString,
@@ -639,15 +690,18 @@ public class RestClient {
                 listToString(parameters.getCollaborators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Comic>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -660,7 +714,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        creators.getCreatorEvents(
+        final Call<Result<Event>> call = creators.getCreatorEvents(
                 creatorId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -671,15 +725,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Event>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -700,7 +757,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        creators.getCreatorSeries(
+        final Call<Result<Series>> call = creators.getCreatorSeries(
                 creatorId,
                 parameters.getTitle(),
                 parameters.getTitleStartsWith(),
@@ -714,15 +771,18 @@ public class RestClient {
                 containsString,
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Series>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -735,7 +795,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        creators.getCreatorStories(
+        final Call<Result<Story>> call = creators.getCreatorStories(
                 creatorId,
                 parameters.getModifiedSince(),
                 listToString(parameters.getComics()),
@@ -744,15 +804,18 @@ public class RestClient {
                 listToString(parameters.getCharacters()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Story>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -761,14 +824,18 @@ public class RestClient {
 
     //<editor-fold desc="Event methods">
     public void getEvent(Integer eventId, final Callback<Event> callback) {
-        events.getEvent(eventId).enqueue(new retrofit2.Callback<Result<Event>>() {
+        final Call<Result<Event>> call = events.getEvent(eventId);
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -781,7 +848,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        events.getEvents(
+        final Call<Result<Event>> call = events.getEvents(
                 parameters.getName(),
                 parameters.getNameStartsWith(),
                 parameters.getModifiedSince(),
@@ -792,15 +859,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Event>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -813,7 +883,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        events.getEventCharacters(
+        final Call<Result<MarvelCharacter>> call = events.getEventCharacters(
                 eventId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -823,15 +893,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -860,7 +933,7 @@ public class RestClient {
         if (parameters.getDateRange() != null)
             dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
 
-        events.getEventComics(
+        final Call<Result<Comic>> call = events.getEventComics(
                 eventId,
                 formatString,
                 formatTypeString,
@@ -888,15 +961,18 @@ public class RestClient {
                 listToString(parameters.getCollaborators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Comic>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -909,7 +985,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        events.getEventCreators(
+        final Call<Result<Creator>> call = events.getEventCreators(
                 eventId,
                 parameters.getFirstName(),
                 parameters.getMiddleName(),
@@ -925,15 +1001,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Creator>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -954,7 +1033,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        events.getEventSeries(
+        final Call<Result<Series>> call = events.getEventSeries(
                 eventId,
                 parameters.getTitle(),
                 parameters.getTitleStartsWith(),
@@ -968,15 +1047,18 @@ public class RestClient {
                 containsString,
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Series>>() {
+                parameters.getOffset());
+        calls.remove(call);
+        call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -989,7 +1071,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        events.getEventStories(
+        final Call<Result<Story>> call = events.getEventStories(
                 eventId,
                 parameters.getModifiedSince(),
                 listToString(parameters.getComics()),
@@ -998,15 +1080,18 @@ public class RestClient {
                 listToString(parameters.getCreators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Story>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1017,14 +1102,18 @@ public class RestClient {
     //<editor-fold desc="Series methods">
 
     public void getSeries(Integer seriesId, final Callback<Series> callback) {
-        series.getSeries(seriesId).enqueue(new retrofit2.Callback<Result<Series>>() {
+        final Call<Result<Series>> call = series.getSeries(seriesId);
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1045,7 +1134,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        series.getSeries(
+        final Call<Result<Series>> call = series.getSeries(
                 parameters.getTitle(),
                 parameters.getTitleStartsWith(),
                 parameters.getStartYear(),
@@ -1059,15 +1148,18 @@ public class RestClient {
                 containsString,
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Series>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1080,7 +1172,7 @@ public class RestClient {
         if (orderBy != null)
             orderByString = orderBy.toString();
 
-        series.getSeriesCharacters(
+        final Call<Result<MarvelCharacter>> call = series.getSeriesCharacters(
                 seriesId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -1090,15 +1182,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1127,7 +1222,7 @@ public class RestClient {
         if (parameters.getDateRange() != null)
             dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
 
-        series.getSeriesComics(
+        final Call<Result<Comic>> call = series.getSeriesComics(
                 seriesId,
                 formatString,
                 formatTypeString,
@@ -1153,15 +1248,18 @@ public class RestClient {
                 listToString(parameters.getCollaborators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Comic>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1174,7 +1272,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        series.getSeriesCreators(
+        final Call<Result<Creator>> call = series.getSeriesCreators(
                 seriesId,
                 parameters.getFirstName(),
                 parameters.getMiddleName(),
@@ -1190,15 +1288,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Creator>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1211,7 +1312,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        series.getSeriesEvents(
+        final Call<Result<Event>> call = series.getSeriesEvents(
                 seriesId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -1222,15 +1323,18 @@ public class RestClient {
                 listToString(parameters.getStories()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Event>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1243,7 +1347,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        series.getSeriesStories(
+        final Call<Result<Story>> call = series.getSeriesStories(
                 seriesId,
                 parameters.getModifiedSince(),
                 listToString(parameters.getComics()),
@@ -1252,15 +1356,18 @@ public class RestClient {
                 listToString(parameters.getCharacters()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Story>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1270,16 +1377,18 @@ public class RestClient {
 
     //<editor-fold desc="Story methods">
     public void getStory(Integer storyId, final Callback<Story> callback) {
-        stories.getStory(
-                storyId
-        ).enqueue(new retrofit2.Callback<Result<Story>>() {
+        final Call<Result<Story>> call = stories.getStory(storyId);
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1292,7 +1401,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        stories.getStories(
+        final Call<Result<Story>> call = stories.getStories(
                 parameters.getModifiedSince(),
                 listToString(parameters.getComics()),
                 listToString(parameters.getSeries()),
@@ -1301,15 +1410,18 @@ public class RestClient {
                 listToString(parameters.getCharacters()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Story>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1322,7 +1434,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        stories.getStoryCharacters(
+        final Call<Result<MarvelCharacter>> call = stories.getStoryCharacters(
                 storyId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -1332,15 +1444,18 @@ public class RestClient {
                 listToString(parameters.getEvents()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1369,7 +1484,7 @@ public class RestClient {
         if (parameters.getDateRange() != null)
             dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
 
-        stories.getStoryComics(
+        final Call<Result<Comic>> call = stories.getStoryComics(
                 storyId,
                 formatString,
                 formatTypeString,
@@ -1396,15 +1511,18 @@ public class RestClient {
                 listToString(parameters.getCollaborators()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Comic>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1417,7 +1535,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        stories.getStoryCreators(
+        final Call<Result<Creator>> call = stories.getStoryCreators(
                 storyId,
                 parameters.getFirstName(),
                 parameters.getMiddleName(),
@@ -1433,15 +1551,18 @@ public class RestClient {
                 listToString(parameters.getEvents()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Creator>>() {
+                parameters.getOffset());
+        calls.remove(call);
+        call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1454,7 +1575,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        stories.getStoryEvents(
+        final Call<Result<Event>> call = stories.getStoryEvents(
                 storyId,
                 parameters.getName(),
                 parameters.getNameStartsWith(),
@@ -1465,15 +1586,18 @@ public class RestClient {
                 listToString(parameters.getComics()),
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Event>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1494,7 +1618,7 @@ public class RestClient {
         if (parameters.getOrderBy() != null)
             orderByString = parameters.getOrderBy().toString();
 
-        stories.getStorySeries(
+        final Call<Result<Series>> call = stories.getStorySeries(
                 storyId,
                 listToString(parameters.getEvents()),
                 parameters.getTitle(),
@@ -1508,15 +1632,18 @@ public class RestClient {
                 containsString,
                 orderByString,
                 parameters.getLimit(),
-                parameters.getOffset()
-        ).enqueue(new retrofit2.Callback<Result<Series>>() {
+                parameters.getOffset());
+        calls.add(call);
+        call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
+                calls.remove(call);
                 callback.success(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
+                calls.remove(call);
                 callback.error(t);
             }
         });
@@ -1530,8 +1657,13 @@ public class RestClient {
     }
 
     public void setLogLevel(HttpLoggingInterceptor.Level level) {
-        logLevel=level;
+        logLevel = level;
         initLogging();
+    }
+
+    public void cancelAllRequests() {
+        for (Call call : calls)
+            call.cancel();
     }
 
     private String listToString(List<?> theList) {

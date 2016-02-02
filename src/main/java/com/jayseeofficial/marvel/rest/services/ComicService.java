@@ -45,6 +45,7 @@ public interface ComicService {
             @Query("hasDigitalIssue") Boolean hasDigitalIssue,
             @Query("modifiedSince") Date modifiedSince,
             @Query("creators") String creators,
+            @Query("characters") String characters,
             @Query("series") String series,
             @Query("events") String events,
             @Query("stories") String stories,

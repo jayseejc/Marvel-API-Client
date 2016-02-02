@@ -101,9 +101,8 @@ public class CharacterParameters {
             return this;
         }
 
-        public Builder events(Integer... events) {
-            parameters.events = new ArrayList<>(events.length);
-            parameters.events.addAll(Arrays.asList(events));
+        public Builder events(List<Integer> events) {
+            parameters.events = events;
             return this;
         }
 

@@ -68,7 +68,15 @@ public class EventParameters {
     }
 
     public static class Builder {
-        private EventParameters parameters = new EventParameters();
+        private EventParameters parameters;
+
+        public Builder(){
+            parameters=new EventParameters();
+        }
+
+        public Builder(EventParameters baseParameters){
+            parameters=baseParameters;
+        }
 
         public Builder name(String name) {
             parameters.name = name;

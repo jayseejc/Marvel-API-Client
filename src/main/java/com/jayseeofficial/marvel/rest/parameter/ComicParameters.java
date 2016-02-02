@@ -150,7 +150,15 @@ public class ComicParameters {
     }
 
     public static class Builder {
-        ComicParameters parameters = new ComicParameters();
+        ComicParameters parameters;
+
+        public Builder() {
+            parameters = new ComicParameters();
+        }
+
+        public Builder(ComicParameters params) {
+            parameters = params;
+        }
 
         public Builder format(Format format) {
             parameters.format = format;
@@ -217,63 +225,63 @@ public class ComicParameters {
             return this;
         }
 
-        public Builder digitalId(Integer digitalId){
-            parameters.digitalId=digitalId;
+        public Builder digitalId(Integer digitalId) {
+            parameters.digitalId = digitalId;
             return this;
         }
 
-        public Builder upc(String upc){
-            parameters.upc=upc;
+        public Builder upc(String upc) {
+            parameters.upc = upc;
             return this;
         }
 
-        public Builder isbn(String isbn){
-            parameters.isbn=isbn;
+        public Builder isbn(String isbn) {
+            parameters.isbn = isbn;
             return this;
         }
 
-        public Builder ean(String ean){
-            parameters.ean=ean;
+        public Builder ean(String ean) {
+            parameters.ean = ean;
             return this;
         }
 
-        public Builder issn(String issn){
-            parameters.issn=issn;
+        public Builder issn(String issn) {
+            parameters.issn = issn;
             return this;
         }
 
-        public Builder hasDigitalIssue(Boolean hasDigitalIssue){
-            parameters.hasDigitalIssue=hasDigitalIssue;
+        public Builder hasDigitalIssue(Boolean hasDigitalIssue) {
+            parameters.hasDigitalIssue = hasDigitalIssue;
             return this;
         }
 
-        public Builder modifiedSince(Date modifiedSince){
-            parameters.modifiedSince=modifiedSince;
+        public Builder modifiedSince(Date modifiedSince) {
+            parameters.modifiedSince = modifiedSince;
             return this;
         }
 
-        public Builder creators(List<Integer> creators){
-            parameters.creators=creators;
+        public Builder creators(List<Integer> creators) {
+            parameters.creators = creators;
             return this;
         }
 
-        public Builder characters(List<Integer> characters){
-            parameters.characters=characters;
+        public Builder characters(List<Integer> characters) {
+            parameters.characters = characters;
             return this;
         }
 
-        public Builder series(List<Integer> series){
-            parameters.series=series;
+        public Builder series(List<Integer> series) {
+            parameters.series = series;
             return this;
         }
 
-        public Builder events(List<Integer> events){
-            parameters.events=events;
+        public Builder events(List<Integer> events) {
+            parameters.events = events;
             return this;
         }
 
-        public Builder stories(List<Integer> stories){
-            parameters.stories=stories;
+        public Builder stories(List<Integer> stories) {
+            parameters.stories = stories;
             return this;
         }
 
@@ -282,22 +290,27 @@ public class ComicParameters {
             return this;
         }
 
-        public Builder collaberators(List<Integer> collaborators){
-            parameters.collaborators =collaborators;
+        public Builder collaberators(List<Integer> collaborators) {
+            parameters.collaborators = collaborators;
             return this;
         }
 
-        public Builder orderBy(ComicOrderBy orderBy){
-            parameters.orderBy=orderBy;
+        public Builder orderBy(ComicOrderBy orderBy) {
+            parameters.orderBy = orderBy;
             return this;
         }
 
-        public Builder limit(Integer limit){
-            parameters.limit=limit;
+        public Builder limit(Integer limit) {
+            parameters.limit = limit;
             return this;
         }
 
-        public ComicParameters build(){
+        public Builder offset(Integer offset){
+            parameters.offset=offset;
+            return this;
+        }
+
+        public ComicParameters build() {
             return parameters;
         }
     }

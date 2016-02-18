@@ -24,10 +24,12 @@ import com.jayseeofficial.marvel.rest.services.EventService;
 import com.jayseeofficial.marvel.rest.services.SeriesService;
 import com.jayseeofficial.marvel.rest.services.StoryService;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -62,6 +64,7 @@ public class RestClient {
     private EventService events;
     private StoryService stories;
     private SeriesService series;
+    private Cache cache = null;
 
     public RestClient(String publicKey, String privateKey) {
         this.publicKey = publicKey;
@@ -83,18 +86,23 @@ public class RestClient {
     }
 
     private void initAuth() {
-        authenticationInterceptor = new AuthenticationInterceptor(publicKey, privateKey);
+        authenticationInterceptor = new AuthenticationInterceptor(publicKey, privateKey, null);
     }
 
     private void initHttpClient() {
-        client = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(timeout, TimeUnit.SECONDS)
                 .readTimeout(timeout, TimeUnit.SECONDS)
                 .writeTimeout(timeout, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(new AuthenticationInterceptor(publicKey, privateKey))
-                .addInterceptor(new com.jayseeofficial.marvel.rest.interceptor.UserAgentInterceptor())
-                .build();
+                .addInterceptor(new com.jayseeofficial.marvel.rest.interceptor.UserAgentInterceptor());
+        if (cache != null) {
+            builder.cache(cache);
+            builder.addInterceptor(new AuthenticationInterceptor(publicKey, privateKey, new File(cache.directory().getAbsolutePath() + "/../auth")));
+        } else {
+            builder.addInterceptor(new AuthenticationInterceptor(publicKey, privateKey, null));
+        }
+        client = builder.build();
         initServices();
     }
 
@@ -1659,6 +1667,16 @@ public class RestClient {
     public void setLogLevel(HttpLoggingInterceptor.Level level) {
         logLevel = level;
         initLogging();
+    }
+
+    public void setCacheDirectory(File cacheDirectory) {
+        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        cache = new Cache(new File(cacheDirectory.getAbsolutePath() + "/" + "http"), cacheSize);
+        initHttpClient();
+    }
+
+    public OkHttpClient getHttpClient() {
+        return client;
     }
 
     public void cancelAllRequests() {

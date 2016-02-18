@@ -1,9 +1,17 @@
 package com.jayseeofficial.marvel.rest.interceptor;
 
+import com.google.gson.Gson;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -14,17 +22,37 @@ import okhttp3.Response;
  * Created by jon on 20/01/16.
  */
 public class AuthenticationInterceptor implements Interceptor {
+    private static final String TIMESTAMP_FILE = "timestamps.json";
     protected String privateKey;
     protected String publicKey;
+    protected File cacheDir;
+    protected Map<String, String> timeStamps;
 
-    public AuthenticationInterceptor(String publicKey, String privateKey) {
+    public AuthenticationInterceptor(String publicKey, String privateKey, File cacheDir) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.cacheDir = cacheDir;
+
+        if (cacheDir != null) {
+            File tsFile = new File(cacheDir.getAbsolutePath() + "/" + TIMESTAMP_FILE);
+            if (tsFile.exists()) {
+                try {
+                    timeStamps = new Gson().fromJson(new FileReader(tsFile), Map.class);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                timeStamps = new HashMap<>();
+                String json = new Gson().toJson(timeStamps);
+
+            }
+        } else
+            timeStamps = new HashMap<>();
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        String ts = ts();
+        String ts = ts(chain.request().url().toString());
         HttpUrl url = chain.request().url().newBuilder()
                 .addQueryParameter("apikey", publicKey)
                 .addQueryParameter("ts", ts)
@@ -40,7 +68,46 @@ public class AuthenticationInterceptor implements Interceptor {
         return new String(Hex.encodeHex(DigestUtils.md5(ts + privateKey + publicKey)));
     }
 
-    private String ts() {
-        return System.currentTimeMillis() + "";
+    private String ts(String path) {
+        String ts;
+        if (cacheDir == null)
+            ts = System.currentTimeMillis() + "";
+        else {
+            if (timeStamps.containsKey(path))
+                ts = timeStamps.get(path);
+            else {
+                ts = System.currentTimeMillis() + "";
+                timeStamps.put(path, ts);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        saveTimestamps();
+                    }
+                }).start();
+            }
+        }
+        return ts;
+    }
+
+    private synchronized void saveTimestamps() {
+        String json = new Gson().toJson(timeStamps);
+        FileWriter writer = null;
+        try {
+            if (!cacheDir.exists()) cacheDir.mkdir();
+            File file = new File(cacheDir.getAbsoluteFile() + "/" + TIMESTAMP_FILE);
+            if (!file.exists()) file.createNewFile();
+            writer = new FileWriter(cacheDir.getAbsoluteFile() + "/" + TIMESTAMP_FILE, false);
+            writer.write(json);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) try {
+                writer.close();
+            } catch (IOException e) {
+                // Well.... We tried.
+                e.printStackTrace();
+            }
+        }
     }
 }

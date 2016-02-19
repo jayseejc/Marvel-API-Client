@@ -10,8 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -26,7 +25,7 @@ public class AuthenticationInterceptor implements Interceptor {
     protected String privateKey;
     protected String publicKey;
     protected File cacheDir;
-    protected Map<String, String> timeStamps;
+    protected ConcurrentHashMap<String, String> timeStamps;
 
     public AuthenticationInterceptor(String publicKey, String privateKey, File cacheDir) {
         this.publicKey = publicKey;
@@ -37,17 +36,16 @@ public class AuthenticationInterceptor implements Interceptor {
             File tsFile = new File(cacheDir.getAbsolutePath() + "/" + TIMESTAMP_FILE);
             if (tsFile.exists()) {
                 try {
-                    timeStamps = new Gson().fromJson(new FileReader(tsFile), Map.class);
+                    timeStamps = new Gson().fromJson(new FileReader(tsFile), ConcurrentHashMap.class);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             } else {
-                timeStamps = new HashMap<>();
-                String json = new Gson().toJson(timeStamps);
-
+                timeStamps = new ConcurrentHashMap<>();
+                saveTimestamps();
             }
         } else
-            timeStamps = new HashMap<>();
+            timeStamps = new ConcurrentHashMap<>();
     }
 
     @Override

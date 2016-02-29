@@ -1,7 +1,5 @@
 package com.jayseeofficial.marvel.rest.parameter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -95,9 +93,8 @@ public class CharacterParameters {
             return this;
         }
 
-        public Builder series(Integer... series) {
-            parameters.series = new ArrayList<>(series.length);
-            parameters.series.addAll(Arrays.asList(series));
+        public Builder series(List<Integer> series) {
+            parameters.series=series;
             return this;
         }
 
@@ -106,9 +103,8 @@ public class CharacterParameters {
             return this;
         }
 
-        public Builder stories(Integer... stories) {
-            parameters.stories = new ArrayList<>(stories.length);
-            parameters.stories.addAll(Arrays.asList(stories));
+        public Builder stories(List<Integer> stories) {
+            parameters.stories=stories;
             return this;
         }
 

@@ -94,7 +94,7 @@ public class AuthenticationInterceptor implements Interceptor {
             if (!cacheDir.exists()) cacheDir.mkdir();
             File file = new File(cacheDir.getAbsoluteFile() + "/" + TIMESTAMP_FILE);
             if (!file.exists()) file.createNewFile();
-            writer = new FileWriter(cacheDir.getAbsoluteFile() + "/" + TIMESTAMP_FILE, false);
+            writer = new FileWriter(file, false);
             writer.write(json);
             writer.close();
         } catch (IOException e) {

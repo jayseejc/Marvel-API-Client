@@ -1,6 +1,7 @@
 package com.jayseeofficial.marvel.rest.interceptor;
 
 import com.google.gson.Gson;
+import com.jayseeofficial.marvel.rest.exception.TooManyRequestsException;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -58,6 +59,8 @@ public class AuthenticationInterceptor implements Interceptor {
                 .build();
         Request request = chain.request().newBuilder().url(url).build();
         Response response = chain.proceed(request);
+
+        if (response.code() == 429) throw new TooManyRequestsException(response.message());
 
         return response;
     }

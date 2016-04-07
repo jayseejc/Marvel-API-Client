@@ -42,11 +42,11 @@ public class AuthenticationInterceptor implements Interceptor {
                     e.printStackTrace();
                 }
             } else {
-                timeStamps = new ConcurrentHashMap<>();
+                timeStamps = new ConcurrentHashMap<String, String>();
                 saveTimestamps();
             }
         } else
-            timeStamps = new ConcurrentHashMap<>();
+            timeStamps = new ConcurrentHashMap<String, String>();
     }
 
     @Override

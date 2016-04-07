@@ -71,7 +71,7 @@ public class RestClient {
         this.privateKey = privateKey;
         this.timeout = DEFAULT_HTTP_TIMEOUT;
         this.logLevel = DEFAULT_LOG_LEVEL;
-        this.calls = new ArrayList<>();
+        this.calls = new ArrayList<Call<?>>();
 
         initLogging();
         initAuth();

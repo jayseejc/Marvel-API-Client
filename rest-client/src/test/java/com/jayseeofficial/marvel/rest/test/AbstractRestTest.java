@@ -2,6 +2,7 @@ package com.jayseeofficial.marvel.rest.test;
 
 import com.google.common.util.concurrent.SettableFuture;
 import com.jayseeofficial.marvel.rest.Callback;
+import com.jayseeofficial.marvel.rest.Constants;
 import com.jayseeofficial.marvel.rest.RestClient;
 import com.jayseeofficial.marvel.rest.model.Result;
 

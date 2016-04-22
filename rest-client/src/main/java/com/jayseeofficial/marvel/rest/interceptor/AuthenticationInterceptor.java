@@ -34,6 +34,7 @@ public class AuthenticationInterceptor implements Interceptor {
         this.cacheDir = cacheDir;
 
         if (cacheDir != null) {
+            cacheDir.mkdirs();
             File tsFile = new File(cacheDir.getAbsolutePath() + "/" + TIMESTAMP_FILE);
             if (tsFile.exists()) {
                 try {
@@ -94,8 +95,8 @@ public class AuthenticationInterceptor implements Interceptor {
         String json = new Gson().toJson(timeStamps);
         FileWriter writer = null;
         try {
-            if (!cacheDir.exists()) cacheDir.mkdir();
-            File file = new File(cacheDir.getAbsoluteFile() + "/" + TIMESTAMP_FILE);
+            if (!cacheDir.exists()) cacheDir.mkdirs();
+            File file = new File(cacheDir.getAbsolutePath() + "/" + TIMESTAMP_FILE);
             if (!file.exists()) file.createNewFile();
             writer = new FileWriter(file, false);
             writer.write(json);

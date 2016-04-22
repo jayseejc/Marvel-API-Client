@@ -98,6 +98,7 @@ public class RestClient {
                 .addInterceptor(new com.jayseeofficial.marvel.rest.interceptor.UserAgentInterceptor());
         if (cache != null) {
             builder.cache(cache);
+            cache.directory().getAbsoluteFile().mkdirs();
             builder.addInterceptor(new AuthenticationInterceptor(publicKey, privateKey, new File(cache.directory().getAbsolutePath() + "/../auth")));
         } else {
             builder.addInterceptor(new AuthenticationInterceptor(publicKey, privateKey, null));

@@ -1,9 +1,10 @@
 package com.jayseeofficial.marvel.rest.test;
 
 import com.google.common.util.concurrent.SettableFuture;
-import com.jayseeofficial.marvel.rest.Callback;
 import com.jayseeofficial.marvel.rest.Constants;
+import com.jayseeofficial.marvel.rest.FailureCallback;
 import com.jayseeofficial.marvel.rest.RestClient;
+import com.jayseeofficial.marvel.rest.SuccessCallback;
 import com.jayseeofficial.marvel.rest.model.Result;
 
 import org.junit.Before;
@@ -33,21 +34,27 @@ public class AbstractRestTest {
         restClient = new RestClient(publicKey, privateKey);
     }
 
-    protected class TestCallback implements Callback {
-
+    protected class TestSuccessCallback implements SuccessCallback {
         private SettableFuture future;
 
-        public TestCallback(SettableFuture future) {
+        public TestSuccessCallback(SettableFuture future) {
+            this.future = future;
+        }
+
+        public void call(Result result) {
+            future.set(result);
+        }
+    }
+
+    protected class TestFailureCallback implements FailureCallback {
+        private SettableFuture future;
+
+        public TestFailureCallback(SettableFuture future) {
             this.future = future;
         }
 
         @Override
-        public void success(Result result) {
-            future.set(result);
-        }
-
-        @Override
-        public void error(Throwable throwable) {
+        public void call(Throwable throwable) {
             future.setException(throwable);
         }
     }

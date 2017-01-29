@@ -31,7 +31,7 @@ public class CharacterTest extends AbstractRestTest {
     @Test
     public void getCharacter() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<MarvelCharacter>> future = SettableFuture.create();
-        restClient.getCharacter(BLACK_WIDOW_ID, new TestCallback(future));
+        restClient.getCharacter(BLACK_WIDOW_ID, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -39,39 +39,43 @@ public class CharacterTest extends AbstractRestTest {
     public void getCharacters() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<MarvelCharacter>> future = SettableFuture.create();
         CharacterParameters parameters = new CharacterParameters.Builder().limit(1).build();
-        restClient.getCharacters(parameters, new TestCallback(future));
+        restClient.getCharacters(parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getCharacterComics() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getCharacterComics() throws InterruptedException, ExecutionException,
+            TimeoutException {
         SettableFuture<Result<Comic>> future = SettableFuture.create();
         ComicParameters parameters = new ComicParameters.Builder().limit(1).build();
-        restClient.getCharacterComics(BLACK_WIDOW_ID, parameters, new TestCallback(future));
+        restClient.getCharacterComics(BLACK_WIDOW_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getCharacterEvents() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getCharacterEvents() throws InterruptedException, ExecutionException,
+            TimeoutException {
         SettableFuture<Result<Event>> future = SettableFuture.create();
         EventParameters parameters = new EventParameters.Builder().limit(1).build();
-        restClient.getCharacterEvents(BLACK_WIDOW_ID, parameters, new TestCallback(future));
+        restClient.getCharacterEvents(BLACK_WIDOW_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getCharacterSeries() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getCharacterSeries() throws InterruptedException, ExecutionException,
+            TimeoutException {
         SettableFuture<Result<Series>> future = SettableFuture.create();
         SeriesParameters parameters = new SeriesParameters.Builder().limit(1).build();
-        restClient.getCharacterSeries(BLACK_WIDOW_ID, parameters, new TestCallback(future));
+        restClient.getCharacterSeries(BLACK_WIDOW_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getCharacterStories() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getCharacterStories() throws InterruptedException, ExecutionException,
+            TimeoutException {
         SettableFuture<Result<Story>> future = SettableFuture.create();
         StoryParameters parameters = new StoryParameters.Builder().limit(1).build();
-        restClient.getCharacterStories(BLACK_WIDOW_ID, parameters, new TestCallback(future));
+        restClient.getCharacterStories(BLACK_WIDOW_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 }

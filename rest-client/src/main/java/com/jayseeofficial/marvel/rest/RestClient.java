@@ -46,7 +46,8 @@ public class RestClient {
 
     private static final String MARVEL_BASE_URL = "https://gateway.marvel.com";
     private static final long DEFAULT_HTTP_TIMEOUT = 30; // Seconds
-    private static final HttpLoggingInterceptor.Level DEFAULT_LOG_LEVEL = HttpLoggingInterceptor.Level.NONE;
+    private static final HttpLoggingInterceptor.Level DEFAULT_LOG_LEVEL =
+            HttpLoggingInterceptor.Level.NONE;
 
     private String publicKey;
     private String privateKey;
@@ -95,11 +96,15 @@ public class RestClient {
                 .readTimeout(timeout, TimeUnit.SECONDS)
                 .writeTimeout(timeout, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(new com.jayseeofficial.marvel.rest.interceptor.UserAgentInterceptor());
+                .addInterceptor(
+                        new com.jayseeofficial.marvel.rest.interceptor.UserAgentInterceptor());
         if (cache != null) {
             builder.cache(cache);
             cache.directory().getAbsoluteFile().mkdirs();
-            builder.addInterceptor(new AuthenticationInterceptor(publicKey, privateKey, new File(cache.directory().getAbsolutePath() + "/../auth")));
+            builder.addInterceptor(new AuthenticationInterceptor(publicKey, privateKey,
+                                                                 new File(cache.directory()
+                                                                               .getAbsolutePath() +
+                                                                          "/../auth")));
         } else {
             builder.addInterceptor(new AuthenticationInterceptor(publicKey, privateKey, null));
         }
@@ -124,25 +129,29 @@ public class RestClient {
 
     // <editor-fold desc="Character methods">
 
-    public void getCharacter(int id, final Callback<MarvelCharacter> callback) {
+    public void getCharacter(int id,
+                             final SuccessCallback<MarvelCharacter> successCallback,
+                             final FailureCallback failureCallback) {
         final Call<Result<MarvelCharacter>> call = characters.getCharacter(id);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(retrofit2.Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCharacters(CharacterParameters parameters, final Callback<MarvelCharacter> callback) {
+    public void getCharacters(CharacterParameters parameters,
+                              final SuccessCallback<MarvelCharacter> successCallback,
+                              final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
         CharacterOrderBy orderBy = parameters.getOrderBy();
 
@@ -166,18 +175,20 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCharacterComics(Integer characterId, ComicParameters parameters, final Callback<Comic> callback) {
+    public void getCharacterComics(Integer characterId, ComicParameters parameters,
+                                   final SuccessCallback<Comic> successCallback,
+                                   final FailureCallback failureCallback) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -198,7 +209,8 @@ public class RestClient {
 
         String dateRangeString = null;
         if (parameters.getDateRange() != null)
-            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
+            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange
+                    ().getRight();
 
         final Call<Result<Comic>> call = characters.getCharacterComics(
                 characterId,
@@ -233,18 +245,20 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCharacterEvents(Integer characterId, EventParameters parameters, final Callback<Event> callback) {
+    public void getCharacterEvents(Integer characterId, EventParameters parameters,
+                                   final SuccessCallback<Event> successCallback,
+                                   final FailureCallback failureCallback) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -267,18 +281,20 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCharacterSeries(Integer characterId, SeriesParameters parameters, final Callback<Series> callback) {
+    public void getCharacterSeries(Integer characterId, SeriesParameters parameters,
+                                   final SuccessCallback<Series> successCallback,
+                                   final FailureCallback failureCallback) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -313,18 +329,20 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCharacterStories(Integer characterId, StoryParameters parameters, final Callback<Story> callback) {
+    public void getCharacterStories(Integer characterId, StoryParameters parameters,
+                                    final SuccessCallback<Story> successCallback,
+                                    final FailureCallback failureCallback) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -346,13 +364,13 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
@@ -361,25 +379,29 @@ public class RestClient {
 
     //<editor-fold desc="Comic methods">
 
-    public void getComic(Integer comicId, final Callback<Comic> callback) {
+    public void getComic(Integer comicId,
+                         final SuccessCallback<Comic> successCallback,
+                         final FailureCallback failureCallback) {
         final Call<Result<Comic>> call = comics.getComic(comicId);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getComics(ComicParameters parameters, final Callback<Comic> callback) {
+    public void getComics(ComicParameters parameters,
+                          final SuccessCallback<Comic> successCallback,
+                          final FailureCallback failureCallback) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -400,7 +422,8 @@ public class RestClient {
 
         String dateRangeString = null;
         if (parameters.getDateRange() != null)
-            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
+            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange
+                    ().getRight();
 
         final Call<Result<Comic>> call = comics.getComics(
                 formatString,
@@ -435,18 +458,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getComicCharacters(Integer comicId, CharacterParameters parameters, final Callback<MarvelCharacter> callback) {
+    public void getComicCharacters(Integer comicId,
+                                   CharacterParameters parameters,
+                                   final SuccessCallback<MarvelCharacter> successCallback,
+                                   final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
 
         String orderByString = null;
@@ -469,18 +495,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getComicCreators(Integer comicId, CreatorParameters parameters, final Callback<Creator> callback) {
+    public void getComicCreators(Integer comicId,
+                                 CreatorParameters parameters,
+                                 final SuccessCallback<Creator> successCallback,
+                                 final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -509,18 +538,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getComicEvents(Integer comicId, EventParameters parameters, final Callback<Event> callback) {
+    public void getComicEvents(Integer comicId,
+                               EventParameters parameters,
+                               final SuccessCallback<Event> successCallback,
+                               final FailureCallback failureCallback) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -544,19 +576,22 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
 
     }
 
-    public void getComicStories(Integer comicId, StoryParameters parameters, final Callback<Story> callback) {
+    public void getComicStories(Integer comicId,
+                                StoryParameters parameters,
+                                final SuccessCallback<Story> successCallback,
+                                final FailureCallback failureCallback) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -577,13 +612,13 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
@@ -591,25 +626,29 @@ public class RestClient {
     //</editor-fold>
 
     //<editor-fold desc="Creator methods">
-    public void getCreator(Integer creatorId, final Callback<Creator> callback) {
+    public void getCreator(Integer creatorId,
+                           final SuccessCallback<Creator> successCallback,
+                           final FailureCallback failureCallback) {
         final Call<Result<Creator>> call = creators.getCreator(creatorId);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCreators(CreatorParameters parameters, final Callback<Creator> callback) {
+    public void getCreators(CreatorParameters parameters,
+                            final SuccessCallback<Creator> successCallback,
+                            final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -638,18 +677,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCreatorComics(Integer creatorId, ComicParameters parameters, final Callback<Comic> callback) {
+    public void getCreatorComics(Integer creatorId,
+                                 ComicParameters parameters,
+                                 final SuccessCallback<Comic> successCallback,
+                                 final FailureCallback failureCallback) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -670,7 +712,8 @@ public class RestClient {
 
         String dateRangeString = null;
         if (parameters.getDateRange() != null)
-            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
+            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange
+                    ().getRight();
 
         final Call<Result<Comic>> call = creators.getCreatorComics(
                 creatorId,
@@ -705,18 +748,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCreatorEvents(Integer creatorId, EventParameters parameters, final Callback<Event> callback) {
+    public void getCreatorEvents(Integer creatorId,
+                                 EventParameters parameters,
+                                 final SuccessCallback<Event> successCallback,
+                                 final FailureCallback failureCallback) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -740,18 +786,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCreatorSeries(Integer creatorId, SeriesParameters parameters, final Callback<Series> callback) {
+    public void getCreatorSeries(Integer creatorId,
+                                 SeriesParameters parameters,
+                                 final SuccessCallback<Series> successCallback,
+                                 final FailureCallback failureCallback) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -786,18 +835,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getCreatorStories(Integer creatorId, StoryParameters parameters, final Callback<Story> callback) {
+    public void getCreatorStories(Integer creatorId,
+                                  StoryParameters parameters,
+                                  final SuccessCallback<Story> successCallback,
+                                  final FailureCallback failureCallback) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -819,38 +871,42 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
     //</editor-fold>
 
     //<editor-fold desc="Event methods">
-    public void getEvent(Integer eventId, final Callback<Event> callback) {
+    public void getEvent(Integer eventId,
+                         final SuccessCallback<Event> successCallback,
+                         final FailureCallback failureCallback) {
         final Call<Result<Event>> call = events.getEvent(eventId);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getEvents(EventParameters parameters, final Callback<Event> callback) {
+    public void getEvents(EventParameters parameters,
+                          final SuccessCallback<Event> successCallback,
+                          final FailureCallback failureCallback) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -874,18 +930,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getEventCharacters(Integer eventId, CharacterParameters parameters, final Callback<MarvelCharacter> callback) {
+    public void getEventCharacters(Integer eventId,
+                                   CharacterParameters parameters,
+                                   final SuccessCallback<MarvelCharacter> successCallback,
+                                   final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
 
         String orderByString = null;
@@ -908,18 +967,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getEventComics(Integer eventId, ComicParameters parameters, final Callback<Comic> callback) {
+    public void getEventComics(Integer eventId,
+                               ComicParameters parameters,
+                               final SuccessCallback<Comic> successCallback,
+                               final FailureCallback failureCallback) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -940,7 +1002,8 @@ public class RestClient {
 
         String dateRangeString = null;
         if (parameters.getDateRange() != null)
-            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
+            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange
+                    ().getRight();
 
         final Call<Result<Comic>> call = events.getEventComics(
                 eventId,
@@ -976,18 +1039,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getEventCreators(Integer eventId, CreatorParameters parameters, final Callback<Creator> callback) {
+    public void getEventCreators(Integer eventId,
+                                 CreatorParameters parameters,
+                                 final SuccessCallback<Creator> successCallback,
+                                 final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -1016,18 +1082,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getEventSeries(Integer eventId, SeriesParameters parameters, final Callback<Series> callback) {
+    public void getEventSeries(Integer eventId,
+                               SeriesParameters parameters,
+                               final SuccessCallback<Series> successCallback,
+                               final FailureCallback failureCallback) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -1062,18 +1131,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getEventStories(Integer eventId, StoryParameters parameters, final Callback<Story> callback) {
+    public void getEventStories(Integer eventId,
+                                StoryParameters parameters,
+                                final SuccessCallback<Story> successCallback,
+                                final FailureCallback failureCallback) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -1095,13 +1167,13 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
@@ -1110,25 +1182,29 @@ public class RestClient {
 
     //<editor-fold desc="Series methods">
 
-    public void getSeries(Integer seriesId, final Callback<Series> callback) {
+    public void getSeries(Integer seriesId,
+                          final SuccessCallback<Series> successCallback,
+                          final FailureCallback failureCallback) {
         final Call<Result<Series>> call = series.getSeries(seriesId);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getSeries(SeriesParameters parameters, final Callback<Series> callback) {
+    public void getSeries(SeriesParameters parameters,
+                          final SuccessCallback<Series> successCallback,
+                          final FailureCallback failureCallback) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -1163,18 +1239,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getSeriesCharacters(Integer seriesId, CharacterParameters parameters, final Callback<MarvelCharacter> callback) {
+    public void getSeriesCharacters(Integer seriesId,
+                                    CharacterParameters parameters,
+                                    final SuccessCallback<MarvelCharacter> successCallback,
+                                    final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
         CharacterOrderBy orderBy = parameters.getOrderBy();
         String orderByString = null;
@@ -1197,18 +1276,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getSeriesComics(Integer seriesId, ComicParameters parameters, final Callback<Comic> callback) {
+    public void getSeriesComics(Integer seriesId,
+                                ComicParameters parameters,
+                                final SuccessCallback<Comic> successCallback,
+                                final FailureCallback failureCallback) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -1229,7 +1311,8 @@ public class RestClient {
 
         String dateRangeString = null;
         if (parameters.getDateRange() != null)
-            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
+            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange
+                    ().getRight();
 
         final Call<Result<Comic>> call = series.getSeriesComics(
                 seriesId,
@@ -1263,18 +1346,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getSeriesCreators(Integer seriesId, CreatorParameters parameters, final Callback<Creator> callback) {
+    public void getSeriesCreators(Integer seriesId,
+                                  CreatorParameters parameters,
+                                  final SuccessCallback<Creator> successCallback,
+                                  final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -1303,18 +1389,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getSeriesEvents(Integer seriesId, EventParameters parameters, final Callback<Event> callback) {
+    public void getSeriesEvents(Integer seriesId,
+                                EventParameters parameters,
+                                final SuccessCallback<Event> successCallback,
+                                final FailureCallback failureCallback) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -1338,18 +1427,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getSeriesStories(Integer seriesId, StoryParameters parameters, final Callback<Story> callback) {
+    public void getSeriesStories(Integer seriesId,
+                                 StoryParameters parameters,
+                                 final SuccessCallback<Story> successCallback,
+                                 final FailureCallback failureCallback) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -1371,13 +1463,13 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
@@ -1385,25 +1477,29 @@ public class RestClient {
     //</editor-fold>
 
     //<editor-fold desc="Story methods">
-    public void getStory(Integer storyId, final Callback<Story> callback) {
+    public void getStory(Integer storyId,
+                         final SuccessCallback<Story> successCallback,
+                         final FailureCallback failureCallback) {
         final Call<Result<Story>> call = stories.getStory(storyId);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getStories(StoryParameters parameters, final Callback<Story> callback) {
+    public void getStories(StoryParameters parameters,
+                           final SuccessCallback<Story> successCallback,
+                           final FailureCallback failureCallback) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -1425,18 +1521,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getStoryCharacters(Integer storyId, CharacterParameters parameters, final Callback<MarvelCharacter> callback) {
+    public void getStoryCharacters(Integer storyId,
+                                   CharacterParameters parameters,
+                                   final SuccessCallback<MarvelCharacter> successCallback,
+                                   final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
 
         String orderByString = null;
@@ -1459,18 +1558,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getStoryComics(Integer storyId, ComicParameters parameters, final Callback<Comic> callback) {
+    public void getStoryComics(Integer storyId,
+                               ComicParameters parameters,
+                               final SuccessCallback<Comic> successCallback,
+                               final FailureCallback failureCallback) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -1491,7 +1593,8 @@ public class RestClient {
 
         String dateRangeString = null;
         if (parameters.getDateRange() != null)
-            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange().getRight();
+            dateRangeString = parameters.getDateRange().getLeft() + "," + parameters.getDateRange
+                    ().getRight();
 
         final Call<Result<Comic>> call = stories.getStoryComics(
                 storyId,
@@ -1526,18 +1629,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getStoryCreators(Integer storyId, CreatorParameters parameters, final Callback<Creator> callback) {
+    public void getStoryCreators(Integer storyId,
+                                 CreatorParameters parameters,
+                                 final SuccessCallback<Creator> successCallback,
+                                 final FailureCallback failureCallback) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -1566,18 +1672,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getStoryEvents(Integer storyId, EventParameters parameters, final Callback<Event> callback) {
+    public void getStoryEvents(Integer storyId,
+                               EventParameters parameters,
+                               final SuccessCallback<Event> successCallback,
+                               final FailureCallback failureCallback) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -1601,18 +1710,21 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
 
-    public void getStorySeries(Integer storyId, SeriesParameters parameters, final Callback<Series> callback) {
+    public void getStorySeries(Integer storyId,
+                               SeriesParameters parameters,
+                               final SuccessCallback<Series> successCallback,
+                               final FailureCallback failureCallback) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -1647,13 +1759,13 @@ public class RestClient {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                callback.success(response.body());
+                successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                callback.error(t);
+                failureCallback.call(t);
             }
         });
     }
@@ -1681,8 +1793,7 @@ public class RestClient {
     }
 
     public void cancelAllRequests() {
-        for (Call call : calls)
-            call.cancel();
+        for (Call call : calls) call.cancel();
     }
 
     private String listToString(List<?> theList) {

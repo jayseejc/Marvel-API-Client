@@ -29,7 +29,7 @@ public class SeriesTest extends AbstractRestTest {
     @Test
     public void getSeries() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Series>> future = SettableFuture.create();
-        restClient.getSeries(HUNDREDTH_ANNIVERSARY_SPECIAL, new TestCallback(future));
+        restClient.getSeries(HUNDREDTH_ANNIVERSARY_SPECIAL, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -38,7 +38,7 @@ public class SeriesTest extends AbstractRestTest {
     public void getSeriess() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Series>> future = SettableFuture.create();
         SeriesParameters parameters = new SeriesParameters.Builder().limit(1).build();
-        restClient.getSeries(parameters, new TestCallback(future));
+        restClient.getSeries(parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -46,7 +46,7 @@ public class SeriesTest extends AbstractRestTest {
     public void getSeriesCharacters() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Character>> future = SettableFuture.create();
         CharacterParameters parameters = new CharacterParameters.Builder().limit(1).build();
-        restClient.getSeriesCharacters(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestCallback(future));
+        restClient.getSeriesCharacters(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -54,7 +54,7 @@ public class SeriesTest extends AbstractRestTest {
     public void getSeriesComics() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Comic>> future = SettableFuture.create();
         ComicParameters parameters = new ComicParameters.Builder().limit(1).build();
-        restClient.getSeriesComics(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestCallback(future));
+        restClient.getSeriesComics(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -62,7 +62,7 @@ public class SeriesTest extends AbstractRestTest {
     public void getSeriesCreators() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Creator>> future = SettableFuture.create();
         CreatorParameters parameters = new CreatorParameters.Builder().limit(1).build();
-        restClient.getSeriesCreators(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestCallback(future));
+        restClient.getSeriesCreators(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -70,7 +70,7 @@ public class SeriesTest extends AbstractRestTest {
     public void getSeriesStories() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Story>> future = SettableFuture.create();
         StoryParameters parameters = new StoryParameters.Builder().limit(1).build();
-        restClient.getSeriesStories(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestCallback(future));
+        restClient.getSeriesStories(HUNDREDTH_ANNIVERSARY_SPECIAL, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 

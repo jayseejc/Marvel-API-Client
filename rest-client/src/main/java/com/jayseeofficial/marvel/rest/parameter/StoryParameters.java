@@ -77,8 +77,8 @@ public class StoryParameters {
             return this;
         }
 
-        public Builder characters(List<Integer> characters){
-            parameters.characters=characters;
+        public Builder characters(List<Integer> characters) {
+            parameters.characters = characters;
             return this;
         }
 

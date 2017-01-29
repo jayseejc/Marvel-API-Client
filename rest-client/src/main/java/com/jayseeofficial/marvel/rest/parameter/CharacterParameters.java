@@ -8,19 +8,18 @@ import java.util.List;
  */
 public class CharacterParameters {
 
-    private CharacterParameters() {
-    }
-
-    private String name;
-    private String nameStartsWith;
-    private Date modifiedSince;
-    private List<Integer> comics;
-    private CharacterOrderBy orderBy;
     protected List<Integer> series;
     protected List<Integer> events;
     protected List<Integer> stories;
     protected Integer limit;
     protected Integer offset;
+    private String name;
+    private String nameStartsWith;
+    private Date modifiedSince;
+    private List<Integer> comics;
+    private CharacterOrderBy orderBy;
+    private CharacterParameters() {
+    }
 
     public List<Integer> getSeries() {
         return series;
@@ -94,7 +93,7 @@ public class CharacterParameters {
         }
 
         public Builder series(List<Integer> series) {
-            parameters.series=series;
+            parameters.series = series;
             return this;
         }
 
@@ -104,7 +103,7 @@ public class CharacterParameters {
         }
 
         public Builder stories(List<Integer> stories) {
-            parameters.stories=stories;
+            parameters.stories = stories;
             return this;
         }
 

@@ -33,7 +33,9 @@ public class EventTest extends AbstractRestTest {
     @Test
     public void getEvent() throws InterruptedException, ExecutionException, TimeoutException {
         final SettableFuture<Result<Event>> future = SettableFuture.create();
-        restClient.getEvent(ACTS_OF_VENGEANCE, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getEvent(ACTS_OF_VENGEANCE,
+                            new TestSuccessCallback(future),
+                            new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -41,15 +43,23 @@ public class EventTest extends AbstractRestTest {
     public void getEvents() throws InterruptedException, ExecutionException, TimeoutException {
         final SettableFuture<Result<Event>> future = SettableFuture.create();
         EventParameters parameters = new EventParameters.Builder().build();
-        restClient.getEvents(parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getEvents(parameters,
+                             new TestSuccessCallback(future),
+                             new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getEventCharacters() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getEventCharacters() throws
+                                     InterruptedException,
+                                     ExecutionException,
+                                     TimeoutException {
         final SettableFuture<Result<MarvelCharacter>> future = SettableFuture.create();
         CharacterParameters parameters = new CharacterParameters.Builder().limit(1).build();
-        restClient.getEventCharacters(ACTS_OF_VENGEANCE, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getEventCharacters(ACTS_OF_VENGEANCE,
+                                      parameters,
+                                      new TestSuccessCallback(future),
+                                      new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -57,15 +67,24 @@ public class EventTest extends AbstractRestTest {
     public void getEventComics() throws InterruptedException, ExecutionException, TimeoutException {
         final SettableFuture<Result<Comic>> future = SettableFuture.create();
         ComicParameters parameters = new ComicParameters.Builder().build();
-        restClient.getEventComics(ACTS_OF_VENGEANCE, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getEventComics(ACTS_OF_VENGEANCE,
+                                  parameters,
+                                  new TestSuccessCallback(future),
+                                  new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getEventCreators() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getEventCreators() throws
+                                   InterruptedException,
+                                   ExecutionException,
+                                   TimeoutException {
         final SettableFuture<Result<Creator>> future = SettableFuture.create();
         CreatorParameters parameters = new CreatorParameters.Builder().build();
-        restClient.getEventCreators(ACTS_OF_VENGEANCE, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getEventCreators(ACTS_OF_VENGEANCE,
+                                    parameters,
+                                    new TestSuccessCallback(future),
+                                    new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -73,15 +92,24 @@ public class EventTest extends AbstractRestTest {
     public void getEventSeries() throws InterruptedException, ExecutionException, TimeoutException {
         final SettableFuture<Result<Series>> future = SettableFuture.create();
         SeriesParameters parameters = new SeriesParameters.Builder().build();
-        restClient.getEventSeries(ACTS_OF_VENGEANCE, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getEventSeries(ACTS_OF_VENGEANCE,
+                                  parameters,
+                                  new TestSuccessCallback(future),
+                                  new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getEventStories() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getEventStories() throws
+                                  InterruptedException,
+                                  ExecutionException,
+                                  TimeoutException {
         final SettableFuture<Result<Story>> future = SettableFuture.create();
         StoryParameters parameters = new StoryParameters.Builder().build();
-        restClient.getEventStories(ACTS_OF_VENGEANCE, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getEventStories(ACTS_OF_VENGEANCE,
+                                   parameters,
+                                   new TestSuccessCallback(future),
+                                   new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 }

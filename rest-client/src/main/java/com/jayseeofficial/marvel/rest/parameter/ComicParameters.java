@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class ComicParameters {
 
+    protected Integer limit;
+    protected Integer offset;
     private Format format;
     private FormatType formatType;
     private Boolean noVariants;
@@ -35,8 +37,9 @@ public class ComicParameters {
     private List<Integer> sharedAppearances;
     private List<Integer> collaborators;
     private ComicOrderBy orderBy;
-    protected Integer limit;
-    protected Integer offset;
+
+    private ComicParameters() {
+    }
 
     public List<Integer> getSeries() {
         return series;
@@ -56,9 +59,6 @@ public class ComicParameters {
 
     public Integer getOffset() {
         return offset;
-    }
-
-    private ComicParameters() {
     }
 
     public Format getFormat() {
@@ -305,8 +305,8 @@ public class ComicParameters {
             return this;
         }
 
-        public Builder offset(Integer offset){
-            parameters.offset=offset;
+        public Builder offset(Integer offset) {
+            parameters.offset = offset;
             return this;
         }
 

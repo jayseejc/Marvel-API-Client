@@ -31,7 +31,9 @@ public class ComicTest extends AbstractRestTest {
     @Test
     public void getComic() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Comic>> future = SettableFuture.create();
-        restClient.getComic(RISE_OF_INCARNATES_16, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getComic(RISE_OF_INCARNATES_16,
+                            new TestSuccessCallback(future),
+                            new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -39,39 +41,62 @@ public class ComicTest extends AbstractRestTest {
     public void getComics() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Comic>> future = SettableFuture.create();
         ComicParameters parameters = new ComicParameters.Builder().limit(1).build();
-        restClient.getComics(parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getComics(parameters,
+                             new TestSuccessCallback(future),
+                             new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getComicCharacters() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getComicCharacters() throws
+                                     InterruptedException,
+                                     ExecutionException,
+                                     TimeoutException {
         SettableFuture<Result<MarvelCharacter>> future = SettableFuture.create();
         CharacterParameters parameters = new CharacterParameters.Builder().limit(1).build();
-        restClient.getComicCharacters(RISE_OF_INCARNATES_16, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getComicCharacters(RISE_OF_INCARNATES_16,
+                                      parameters,
+                                      new TestSuccessCallback(future),
+                                      new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getComicCreators() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getComicCreators() throws
+                                   InterruptedException,
+                                   ExecutionException,
+                                   TimeoutException {
         SettableFuture<Result<Creator>> future = SettableFuture.create();
         CreatorParameters parameters = new CreatorParameters.Builder().limit(1).build();
-        restClient.getComicCreators(RISE_OF_INCARNATES_16, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
-        assertThat(future.get(TIMEOUT,TimeUnit.SECONDS).getData()).isNotNull();
+        restClient.getComicCreators(RISE_OF_INCARNATES_16,
+                                    parameters,
+                                    new TestSuccessCallback(future),
+                                    new TestFailureCallback(future));
+        assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
     public void getComicEvents() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Event>> future = SettableFuture.create();
         EventParameters parameters = new EventParameters.Builder().limit(1).build();
-        restClient.getComicEvents(RISE_OF_INCARNATES_16, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
-        assertThat(future.get(TIMEOUT,TimeUnit.SECONDS).getData()).isNotNull();
+        restClient.getComicEvents(RISE_OF_INCARNATES_16,
+                                  parameters,
+                                  new TestSuccessCallback(future),
+                                  new TestFailureCallback(future));
+        assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getComicStories() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getComicStories() throws
+                                  InterruptedException,
+                                  ExecutionException,
+                                  TimeoutException {
         SettableFuture<Result<Story>> future = SettableFuture.create();
         StoryParameters parameters = new StoryParameters.Builder().limit(1).build();
-        restClient.getComicStories(RISE_OF_INCARNATES_16, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
-        assertThat(future.get(TIMEOUT,TimeUnit.SECONDS).getData()).isNotNull();
+        restClient.getComicStories(RISE_OF_INCARNATES_16,
+                                   parameters,
+                                   new TestSuccessCallback(future),
+                                   new TestFailureCallback(future));
+        assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 }

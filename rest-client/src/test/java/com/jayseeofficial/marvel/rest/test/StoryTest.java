@@ -32,7 +32,9 @@ public class StoryTest extends AbstractRestTest {
     @Test
     public void getStory() throws ExecutionException, InterruptedException, TimeoutException {
         SettableFuture<Result<Story>> future = SettableFuture.create();
-        restClient.getStory(STORY_ID, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getStory(STORY_ID,
+                            new TestSuccessCallback(future),
+                            new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -40,15 +42,23 @@ public class StoryTest extends AbstractRestTest {
     public void getStories() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Story>> future = SettableFuture.create();
         StoryParameters parameters = new StoryParameters.Builder().limit(1).build();
-        restClient.getStories(parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getStories(parameters,
+                              new TestSuccessCallback(future),
+                              new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getStoryCharacters() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getStoryCharacters() throws
+                                     InterruptedException,
+                                     ExecutionException,
+                                     TimeoutException {
         SettableFuture<Result<MarvelCharacter>> future = SettableFuture.create();
         CharacterParameters parameters = new CharacterParameters.Builder().limit(1).build();
-        restClient.getStoryCharacters(STORY_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getStoryCharacters(STORY_ID,
+                                      parameters,
+                                      new TestSuccessCallback(future),
+                                      new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -56,15 +66,24 @@ public class StoryTest extends AbstractRestTest {
     public void getStoryComics() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Comic>> future = SettableFuture.create();
         ComicParameters parameters = new ComicParameters.Builder().limit(1).build();
-        restClient.getStoryComics(STORY_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getStoryComics(STORY_ID,
+                                  parameters,
+                                  new TestSuccessCallback(future),
+                                  new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
     @Test
-    public void getStoryCreators() throws InterruptedException, ExecutionException, TimeoutException {
+    public void getStoryCreators() throws
+                                   InterruptedException,
+                                   ExecutionException,
+                                   TimeoutException {
         SettableFuture<Result<Creator>> future = SettableFuture.create();
         CreatorParameters parameters = new CreatorParameters.Builder().limit(1).build();
-        restClient.getStoryCreators(STORY_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getStoryCreators(STORY_ID,
+                                    parameters,
+                                    new TestSuccessCallback(future),
+                                    new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -72,7 +91,10 @@ public class StoryTest extends AbstractRestTest {
     public void getStoryEvents() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<MarvelCharacter>> future = SettableFuture.create();
         EventParameters parameters = new EventParameters.Builder().limit(1).build();
-        restClient.getStoryEvents(STORY_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getStoryEvents(STORY_ID,
+                                  parameters,
+                                  new TestSuccessCallback(future),
+                                  new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 
@@ -80,7 +102,10 @@ public class StoryTest extends AbstractRestTest {
     public void getStorySeries() throws InterruptedException, ExecutionException, TimeoutException {
         SettableFuture<Result<Series>> future = SettableFuture.create();
         SeriesParameters parameters = new SeriesParameters.Builder().limit(1).build();
-        restClient.getStorySeries(STORY_ID, parameters, new TestSuccessCallback(future), new TestFailureCallback(future));
+        restClient.getStorySeries(STORY_ID,
+                                  parameters,
+                                  new TestSuccessCallback(future),
+                                  new TestFailureCallback(future));
         assertThat(future.get(TIMEOUT, TimeUnit.SECONDS).getData()).isNotNull();
     }
 }

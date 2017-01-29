@@ -89,7 +89,7 @@ public interface SeriesService {
 
     @GET("/v1/public/series/{seriesId}/creators")
     Call<Result<Creator>> getSeriesCreators(
-            @Path("seriesId")int seriesId,
+            @Path("seriesId") int seriesId,
             @Query("firstName") String firstName,
             @Query("middleName") String middleName,
             @Query("lastName") String lastName,

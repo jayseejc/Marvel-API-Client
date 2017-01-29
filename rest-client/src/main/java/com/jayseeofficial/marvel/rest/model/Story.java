@@ -161,6 +161,10 @@ public class Story implements Serializable {
         return stories;
     }
 
+    public void setStories(StoryList stories) {
+        this.stories = stories;
+    }
+
     public StorySummary getNext() {
         return next;
     }
@@ -175,11 +179,6 @@ public class Story implements Serializable {
 
     public void setPrevious(StorySummary previous) {
         this.previous = previous;
-    }
-
-    public void setStories(StoryList stories) {
-        this.stories = stories;
-
     }
 
     @Override

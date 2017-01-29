@@ -8,9 +8,6 @@ import java.util.List;
  */
 public class EventParameters {
 
-    private EventParameters() {
-    }
-
     private String name;
     private String nameStartsWith;
     private Date modifiedSince;
@@ -22,6 +19,8 @@ public class EventParameters {
     private EventOrderBy orderBy;
     private Integer limit;
     private Integer offset;
+    private EventParameters() {
+    }
 
     public String getName() {
         return name;
@@ -70,12 +69,12 @@ public class EventParameters {
     public static class Builder {
         private EventParameters parameters;
 
-        public Builder(){
-            parameters=new EventParameters();
+        public Builder() {
+            parameters = new EventParameters();
         }
 
-        public Builder(EventParameters baseParameters){
-            parameters=baseParameters;
+        public Builder(EventParameters baseParameters) {
+            parameters = baseParameters;
         }
 
         public Builder name(String name) {
@@ -98,8 +97,8 @@ public class EventParameters {
             return this;
         }
 
-        public Builder characters(List<Integer> characters){
-            parameters.characters=characters;
+        public Builder characters(List<Integer> characters) {
+            parameters.characters = characters;
             return this;
         }
 

@@ -92,8 +92,8 @@ public class SeriesParameters {
             return this;
         }
 
-        public Builder startYear(Integer startYear){
-            parameters.startYear=startYear;
+        public Builder startYear(Integer startYear) {
+            parameters.startYear = startYear;
             return this;
         }
 
@@ -107,13 +107,13 @@ public class SeriesParameters {
             return this;
         }
 
-        public Builder seriesType(SeriesType seriesType){
-            parameters.seriesType=seriesType;
+        public Builder seriesType(SeriesType seriesType) {
+            parameters.seriesType = seriesType;
             return this;
         }
 
-        public Builder contains(Format contains){
-            parameters.contains=contains;
+        public Builder contains(Format contains) {
+            parameters.contains = contains;
             return this;
         }
 
@@ -127,8 +127,8 @@ public class SeriesParameters {
             return this;
         }
 
-        public Builder events(List<Integer> events){
-            parameters.events=events;
+        public Builder events(List<Integer> events) {
+            parameters.events = events;
             return this;
         }
 
@@ -147,8 +147,8 @@ public class SeriesParameters {
             return this;
         }
 
-        public Builder characters(List<Integer> characters){
-            parameters.characters=characters;
+        public Builder characters(List<Integer> characters) {
+            parameters.characters = characters;
             return this;
         }
 

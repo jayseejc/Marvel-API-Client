@@ -17,9 +17,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class AbstractRestTest {
 
-    protected RestClient restClient;
-
     protected final int TIMEOUT = 90;
+    protected RestClient restClient;
 
     @Before
     public void before() {

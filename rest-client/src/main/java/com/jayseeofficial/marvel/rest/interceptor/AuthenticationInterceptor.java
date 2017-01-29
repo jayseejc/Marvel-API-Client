@@ -38,7 +38,8 @@ public class AuthenticationInterceptor implements Interceptor {
             File tsFile = new File(cacheDir.getAbsolutePath() + "/" + TIMESTAMP_FILE);
             if (tsFile.exists()) {
                 try {
-                    timeStamps = new Gson().fromJson(new FileReader(tsFile), ConcurrentHashMap.class);
+                    timeStamps =
+                            new Gson().fromJson(new FileReader(tsFile), ConcurrentHashMap.class);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -54,10 +55,10 @@ public class AuthenticationInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         String ts = ts(chain.request().url().toString());
         HttpUrl url = chain.request().url().newBuilder()
-                .addQueryParameter("apikey", publicKey)
-                .addQueryParameter("ts", ts)
-                .addQueryParameter("hash", hash(ts))
-                .build();
+                           .addQueryParameter("apikey", publicKey)
+                           .addQueryParameter("ts", ts)
+                           .addQueryParameter("hash", hash(ts))
+                           .build();
         Request request = chain.request().newBuilder().url(url).build();
         Response response = chain.proceed(request);
 

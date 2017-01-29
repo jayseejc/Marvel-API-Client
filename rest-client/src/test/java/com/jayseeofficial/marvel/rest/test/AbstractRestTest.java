@@ -8,6 +8,7 @@ import com.jayseeofficial.marvel.rest.SuccessCallback;
 import com.jayseeofficial.marvel.rest.model.Result;
 
 import org.junit.Before;
+import org.junit.Rule;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -17,8 +18,11 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class AbstractRestTest {
 
-    protected final int TIMEOUT = 90;
+    protected final int TIMEOUT = 15;
     protected RestClient restClient;
+
+    @Rule
+    public RetryTestRule retryTestRule = new RetryTestRule(3);
 
     @Before
     public void before() {

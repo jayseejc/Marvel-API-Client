@@ -135,9 +135,9 @@ public class RestClient {
                              FailureCallback failure) {
         final Call<Result<MarvelCharacter>> call = characters.getCharacter(id);
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
@@ -179,9 +179,9 @@ public class RestClient {
                 parameters.getOffset());
 
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
 
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
@@ -257,9 +257,9 @@ public class RestClient {
                 parameters.getOffset());
 
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
 
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
@@ -300,9 +300,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
@@ -355,9 +355,9 @@ public class RestClient {
                 parameters.getOffset());
 
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
 
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
@@ -397,9 +397,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
@@ -427,9 +427,9 @@ public class RestClient {
                          FailureCallback failure) {
         final Call<Result<Comic>> call = comics.getComic(comicId);
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
@@ -503,9 +503,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
@@ -546,9 +546,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
@@ -595,9 +595,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
@@ -639,9 +639,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
@@ -681,9 +681,9 @@ public class RestClient {
                 orderByString, parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
@@ -710,9 +710,9 @@ public class RestClient {
                            FailureCallback failure) {
         final Call<Result<Creator>> call = creators.getCreator(creatorId);
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
@@ -758,9 +758,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
@@ -835,9 +835,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
@@ -879,9 +879,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
@@ -934,9 +934,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
@@ -976,9 +976,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
@@ -1004,9 +1004,9 @@ public class RestClient {
                          FailureCallback failure) {
         final Call<Result<Event>> call = events.getEvent(eventId);
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
@@ -1047,9 +1047,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
@@ -1090,9 +1090,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
@@ -1168,9 +1168,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
@@ -1217,9 +1217,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
@@ -1271,10 +1271,10 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
-        WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
-        WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<SuccessCallback>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
@@ -1314,9 +1314,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
@@ -1344,9 +1344,9 @@ public class RestClient {
                           FailureCallback failure) {
         final Call<Result<Series>> call = series.getSeries(seriesId);
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
@@ -1398,9 +1398,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
@@ -1441,9 +1441,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
@@ -1517,9 +1517,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
@@ -1566,9 +1566,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
@@ -1610,9 +1610,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
@@ -1652,9 +1652,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
@@ -1681,9 +1681,9 @@ public class RestClient {
                          FailureCallback failure) {
         final Call<Result<Story>> call = stories.getStory(storyId);
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
@@ -1722,9 +1722,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
@@ -1765,9 +1765,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
@@ -1842,9 +1842,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
@@ -1890,10 +1890,10 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
-        WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
-        WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<SuccessCallback>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
@@ -1935,9 +1935,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
@@ -1990,9 +1990,9 @@ public class RestClient {
                 parameters.getLimit(),
                 parameters.getOffset());
         final WeakReference<SuccessCallback> successCallbackWeakReference =
-                new WeakReference<>(success);
+                new WeakReference<SuccessCallback>(success);
         final WeakReference<FailureCallback> failureCallbackWeakReference =
-                new WeakReference<>(failure);
+                new WeakReference<FailureCallback>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override

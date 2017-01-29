@@ -25,6 +25,7 @@ import com.jayseeofficial.marvel.rest.services.SeriesService;
 import com.jayseeofficial.marvel.rest.services.StoryService;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -130,28 +131,34 @@ public class RestClient {
     // <editor-fold desc="Character methods">
 
     public void getCharacter(int id,
-                             final SuccessCallback<MarvelCharacter> successCallback,
-                             final FailureCallback failureCallback) {
+                             SuccessCallback<MarvelCharacter> success,
+                             FailureCallback failure) {
         final Call<Result<MarvelCharacter>> call = characters.getCharacter(id);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(retrofit2.Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCharacters(CharacterParameters parameters,
-                              final SuccessCallback<MarvelCharacter> successCallback,
-                              final FailureCallback failureCallback) {
+                              SuccessCallback<MarvelCharacter> success,
+                              FailureCallback failure) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
         CharacterOrderBy orderBy = parameters.getOrderBy();
 
@@ -170,25 +177,33 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
+
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCharacterComics(Integer characterId, ComicParameters parameters,
-                                   final SuccessCallback<Comic> successCallback,
-                                   final FailureCallback failureCallback) {
+                                   SuccessCallback<Comic> success,
+                                   FailureCallback failure) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -240,25 +255,33 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
+
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCharacterEvents(Integer characterId, EventParameters parameters,
-                                   final SuccessCallback<Event> successCallback,
-                                   final FailureCallback failureCallback) {
+                                   SuccessCallback<Event> success,
+                                   FailureCallback failure) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -276,25 +299,31 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCharacterSeries(Integer characterId, SeriesParameters parameters,
-                                   final SuccessCallback<Series> successCallback,
-                                   final FailureCallback failureCallback) {
+                                   SuccessCallback<Series> success,
+                                   FailureCallback failure) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -324,25 +353,33 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
+
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCharacterStories(Integer characterId, StoryParameters parameters,
-                                    final SuccessCallback<Story> successCallback,
-                                    final FailureCallback failureCallback) {
+                                    SuccessCallback<Story> success,
+                                    FailureCallback failure) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -359,18 +396,24 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
@@ -380,28 +423,34 @@ public class RestClient {
     //<editor-fold desc="Comic methods">
 
     public void getComic(Integer comicId,
-                         final SuccessCallback<Comic> successCallback,
-                         final FailureCallback failureCallback) {
+                         SuccessCallback<Comic> success,
+                         FailureCallback failure) {
         final Call<Result<Comic>> call = comics.getComic(comicId);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getComics(ComicParameters parameters,
-                          final SuccessCallback<Comic> successCallback,
-                          final FailureCallback failureCallback) {
+                          SuccessCallback<Comic> success,
+                          FailureCallback failure) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -453,26 +502,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getComicCharacters(Integer comicId,
                                    CharacterParameters parameters,
-                                   final SuccessCallback<MarvelCharacter> successCallback,
-                                   final FailureCallback failureCallback) {
+                                   SuccessCallback<MarvelCharacter> success,
+                                   FailureCallback failure) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
 
         String orderByString = null;
@@ -490,26 +545,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getComicCreators(Integer comicId,
                                  CreatorParameters parameters,
-                                 final SuccessCallback<Creator> successCallback,
-                                 final FailureCallback failureCallback) {
+                                 SuccessCallback<Creator> success,
+                                 FailureCallback failure) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -533,26 +594,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getComicEvents(Integer comicId,
                                EventParameters parameters,
-                               final SuccessCallback<Event> successCallback,
-                               final FailureCallback failureCallback) {
+                               SuccessCallback<Event> success,
+                               FailureCallback failure) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -571,18 +638,24 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
 
@@ -590,8 +663,8 @@ public class RestClient {
 
     public void getComicStories(Integer comicId,
                                 StoryParameters parameters,
-                                final SuccessCallback<Story> successCallback,
-                                final FailureCallback failureCallback) {
+                                SuccessCallback<Story> success,
+                                FailureCallback failure) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -607,18 +680,24 @@ public class RestClient {
                 listToString(parameters.getCharacters()),
                 orderByString, parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
@@ -627,28 +706,34 @@ public class RestClient {
 
     //<editor-fold desc="Creator methods">
     public void getCreator(Integer creatorId,
-                           final SuccessCallback<Creator> successCallback,
-                           final FailureCallback failureCallback) {
+                           SuccessCallback<Creator> success,
+                           FailureCallback failure) {
         final Call<Result<Creator>> call = creators.getCreator(creatorId);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCreators(CreatorParameters parameters,
-                            final SuccessCallback<Creator> successCallback,
-                            final FailureCallback failureCallback) {
+                            SuccessCallback<Creator> success,
+                            FailureCallback failure) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -672,26 +757,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCreatorComics(Integer creatorId,
                                  ComicParameters parameters,
-                                 final SuccessCallback<Comic> successCallback,
-                                 final FailureCallback failureCallback) {
+                                 SuccessCallback<Comic> success,
+                                 FailureCallback failure) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -743,26 +834,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCreatorEvents(Integer creatorId,
                                  EventParameters parameters,
-                                 final SuccessCallback<Event> successCallback,
-                                 final FailureCallback failureCallback) {
+                                 SuccessCallback<Event> success,
+                                 FailureCallback failure) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -781,26 +878,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCreatorSeries(Integer creatorId,
                                  SeriesParameters parameters,
-                                 final SuccessCallback<Series> successCallback,
-                                 final FailureCallback failureCallback) {
+                                 SuccessCallback<Series> success,
+                                 FailureCallback failure) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -830,26 +933,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getCreatorStories(Integer creatorId,
                                   StoryParameters parameters,
-                                  final SuccessCallback<Story> successCallback,
-                                  final FailureCallback failureCallback) {
+                                  SuccessCallback<Story> success,
+                                  FailureCallback failure) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -866,18 +975,24 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
@@ -885,28 +1000,34 @@ public class RestClient {
 
     //<editor-fold desc="Event methods">
     public void getEvent(Integer eventId,
-                         final SuccessCallback<Event> successCallback,
-                         final FailureCallback failureCallback) {
+                         SuccessCallback<Event> success,
+                         FailureCallback failure) {
         final Call<Result<Event>> call = events.getEvent(eventId);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getEvents(EventParameters parameters,
-                          final SuccessCallback<Event> successCallback,
-                          final FailureCallback failureCallback) {
+                          SuccessCallback<Event> success,
+                          FailureCallback failure) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -925,26 +1046,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getEventCharacters(Integer eventId,
                                    CharacterParameters parameters,
-                                   final SuccessCallback<MarvelCharacter> successCallback,
-                                   final FailureCallback failureCallback) {
+                                   SuccessCallback<MarvelCharacter> success,
+                                   FailureCallback failure) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
 
         String orderByString = null;
@@ -962,26 +1089,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getEventComics(Integer eventId,
                                ComicParameters parameters,
-                               final SuccessCallback<Comic> successCallback,
-                               final FailureCallback failureCallback) {
+                               SuccessCallback<Comic> success,
+                               FailureCallback failure) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -1034,26 +1167,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getEventCreators(Integer eventId,
                                  CreatorParameters parameters,
-                                 final SuccessCallback<Creator> successCallback,
-                                 final FailureCallback failureCallback) {
+                                 SuccessCallback<Creator> success,
+                                 FailureCallback failure) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -1077,26 +1216,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getEventSeries(Integer eventId,
                                SeriesParameters parameters,
-                               final SuccessCallback<Series> successCallback,
-                               final FailureCallback failureCallback) {
+                               SuccessCallback<Series> success,
+                               FailureCallback failure) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -1126,26 +1271,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
-        calls.remove(call);
+        WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
+        calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getEventStories(Integer eventId,
                                 StoryParameters parameters,
-                                final SuccessCallback<Story> successCallback,
-                                final FailureCallback failureCallback) {
+                                SuccessCallback<Story> success,
+                                FailureCallback failure) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -1162,18 +1313,24 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
@@ -1183,28 +1340,34 @@ public class RestClient {
     //<editor-fold desc="Series methods">
 
     public void getSeries(Integer seriesId,
-                          final SuccessCallback<Series> successCallback,
-                          final FailureCallback failureCallback) {
+                          SuccessCallback<Series> success,
+                          FailureCallback failure) {
         final Call<Result<Series>> call = series.getSeries(seriesId);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getSeries(SeriesParameters parameters,
-                          final SuccessCallback<Series> successCallback,
-                          final FailureCallback failureCallback) {
+                          SuccessCallback<Series> success,
+                          FailureCallback failure) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -1234,26 +1397,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getSeriesCharacters(Integer seriesId,
                                     CharacterParameters parameters,
-                                    final SuccessCallback<MarvelCharacter> successCallback,
-                                    final FailureCallback failureCallback) {
+                                    SuccessCallback<MarvelCharacter> success,
+                                    FailureCallback failure) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
         CharacterOrderBy orderBy = parameters.getOrderBy();
         String orderByString = null;
@@ -1271,26 +1440,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getSeriesComics(Integer seriesId,
                                 ComicParameters parameters,
-                                final SuccessCallback<Comic> successCallback,
-                                final FailureCallback failureCallback) {
+                                SuccessCallback<Comic> success,
+                                FailureCallback failure) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -1341,26 +1516,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getSeriesCreators(Integer seriesId,
                                   CreatorParameters parameters,
-                                  final SuccessCallback<Creator> successCallback,
-                                  final FailureCallback failureCallback) {
+                                  SuccessCallback<Creator> success,
+                                  FailureCallback failure) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -1384,26 +1565,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getSeriesEvents(Integer seriesId,
                                 EventParameters parameters,
-                                final SuccessCallback<Event> successCallback,
-                                final FailureCallback failureCallback) {
+                                SuccessCallback<Event> success,
+                                FailureCallback failure) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -1422,26 +1609,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getSeriesStories(Integer seriesId,
                                  StoryParameters parameters,
-                                 final SuccessCallback<Story> successCallback,
-                                 final FailureCallback failureCallback) {
+                                 SuccessCallback<Story> success,
+                                 FailureCallback failure) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -1458,18 +1651,24 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
@@ -1478,28 +1677,34 @@ public class RestClient {
 
     //<editor-fold desc="Story methods">
     public void getStory(Integer storyId,
-                         final SuccessCallback<Story> successCallback,
-                         final FailureCallback failureCallback) {
+                         SuccessCallback<Story> success,
+                         FailureCallback failure) {
         final Call<Result<Story>> call = stories.getStory(storyId);
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getStories(StoryParameters parameters,
-                           final SuccessCallback<Story> successCallback,
-                           final FailureCallback failureCallback) {
+                           SuccessCallback<Story> success,
+                           FailureCallback failure) {
         if (parameters == null) parameters = new StoryParameters.Builder().build();
 
         String orderByString = null;
@@ -1516,26 +1721,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Story>>() {
             @Override
             public void onResponse(Response<Result<Story>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getStoryCharacters(Integer storyId,
                                    CharacterParameters parameters,
-                                   final SuccessCallback<MarvelCharacter> successCallback,
-                                   final FailureCallback failureCallback) {
+                                   SuccessCallback<MarvelCharacter> success,
+                                   FailureCallback failure) {
         if (parameters == null) parameters = new CharacterParameters.Builder().build();
 
         String orderByString = null;
@@ -1553,26 +1764,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<MarvelCharacter>>() {
             @Override
             public void onResponse(Response<Result<MarvelCharacter>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getStoryComics(Integer storyId,
                                ComicParameters parameters,
-                               final SuccessCallback<Comic> successCallback,
-                               final FailureCallback failureCallback) {
+                               SuccessCallback<Comic> success,
+                               FailureCallback failure) {
         if (parameters == null) parameters = new ComicParameters.Builder().build();
 
         String formatString = null;
@@ -1624,26 +1841,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Comic>>() {
             @Override
             public void onResponse(Response<Result<Comic>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getStoryCreators(Integer storyId,
                                  CreatorParameters parameters,
-                                 final SuccessCallback<Creator> successCallback,
-                                 final FailureCallback failureCallback) {
+                                 SuccessCallback<Creator> success,
+                                 FailureCallback failure) {
         if (parameters == null) parameters = new CreatorParameters.Builder().build();
 
         String orderByString = null;
@@ -1667,26 +1890,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
-        calls.remove(call);
+        WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
+        calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Creator>>() {
             @Override
             public void onResponse(Response<Result<Creator>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getStoryEvents(Integer storyId,
                                EventParameters parameters,
-                               final SuccessCallback<Event> successCallback,
-                               final FailureCallback failureCallback) {
+                               SuccessCallback<Event> success,
+                               FailureCallback failure) {
         if (parameters == null) parameters = new EventParameters.Builder().build();
 
         String orderByString = null;
@@ -1705,26 +1934,32 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Event>>() {
             @Override
             public void onResponse(Response<Result<Event>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
 
     public void getStorySeries(Integer storyId,
                                SeriesParameters parameters,
-                               final SuccessCallback<Series> successCallback,
-                               final FailureCallback failureCallback) {
+                               SuccessCallback<Series> success,
+                               FailureCallback failure) {
         if (parameters == null) parameters = new SeriesParameters.Builder().build();
 
         String seriesTypeString = null;
@@ -1754,18 +1989,24 @@ public class RestClient {
                 orderByString,
                 parameters.getLimit(),
                 parameters.getOffset());
+        final WeakReference<SuccessCallback> successCallbackWeakReference =
+                new WeakReference<>(success);
+        final WeakReference<FailureCallback> failureCallbackWeakReference =
+                new WeakReference<>(failure);
         calls.add(call);
         call.enqueue(new retrofit2.Callback<Result<Series>>() {
             @Override
             public void onResponse(Response<Result<Series>> response) {
                 calls.remove(call);
-                successCallback.call(response.body());
+                SuccessCallback successCallback = successCallbackWeakReference.get();
+                if (successCallback != null) successCallback.call(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 calls.remove(call);
-                failureCallback.call(t);
+                FailureCallback failureCallback = failureCallbackWeakReference.get();
+                if (failureCallback != null) failureCallback.call(t);
             }
         });
     }
